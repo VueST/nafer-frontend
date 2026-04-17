@@ -1,0 +1,11 @@
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Reactive;
+global using System.Reactive.Linq;
+global using System.Threading.Tasks;
+global using ReactiveUI;
+global using ReactiveUI.Fody.Helpers;
+global using Nafer.Core.Domain.Models;
+global using Nafer.Core.Application.Contracts;
+global using Nafer.Core.Application.ViewModels.Auth;

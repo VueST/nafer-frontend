@@ -1,0 +1,49 @@
+<UserControl
+    x:Class="Nafer.WinUI.Features.Auth.AccountFlyoutControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:auth="using:Nafer.WinUI.Features.Auth"
+    x:DataType="auth:AccountFlyoutControl">
+
+    <Border HorizontalAlignment="Center"
+            MinWidth="300" MaxWidth="360"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="0">
+        <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+ 
+            <!-- State 1: Not Authenticated (Centered SelectorBar Header) -->
+            <StackPanel Grid.Row="0" Grid.RowSpan="2" 
+                        Visibility="{x:Bind ViewModel.IsAuthenticated, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}"
+                        Spacing="0"
+                        HorizontalAlignment="Center">
+                
+                <SelectorBar x:Name="AuthSelectorBar"
+                             Margin="12,12,12,4"
+                             HorizontalAlignment="Center"
+                             SelectionChanged="AuthSelectorBar_SelectionChanged">
+                    <SelectorBarItem Text="Sign In" />
+                    <SelectorBarItem Text="Sign Up" />
+                </SelectorBar>
+ 
+                <!-- Content Area (Clean, Auto-sized, Centered) -->
+                <Grid Margin="12,0,12,16" HorizontalAlignment="Center" Width="260">
+                    <auth:SignInControl x:Name="SignInView" HorizontalAlignment="Stretch" />
+                    <auth:SignUpControl x:Name="SignUpView" Visibility="Collapsed" HorizontalAlignment="Stretch" />
+                </Grid>
+            </StackPanel>
+
+            <!-- State 2: Authenticated (User Profile) -->
+            <auth:UserProfileControl
+                 x:Name="ProfileView"
+                 Grid.Row="0" Grid.RowSpan="2"
+                 Visibility="{x:Bind ViewModel.IsAuthenticated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+        </Grid>
+    </Border>
+</UserControl>

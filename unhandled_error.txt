@@ -1,0 +1,104 @@
+System.UnauthorizedAccessException: Access is denied.
+
+Access denied.  Calling Scale API is not allowed on this object at this time, as this object currently has the ElementCompositionPreview.GetElementVisual property in use.
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IUIElementMethods.set_Scale(IObjectReference _obj, Vector3 value)
+   at Microsoft.UI.Xaml.UIElement.set_Scale(Vector3 value)
+   at Nafer.WinUI.Features.Shell.ShellPage.AccountNavItem_PointerEntered(Object sender, PointerRoutedEventArgs e) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\Features\Shell\ShellPage.xaml.cs:line 43
+   at WinRT._EventSource_global__Microsoft_UI_Xaml_Input_PointerEventHandler.EventState.<GetEventInvoke>b__1_0(Object sender, PointerRoutedEventArgs e)
+   at ABI.Microsoft.UI.Xaml.Input.PointerEventHandler.Do_Abi_Invoke(IntPtr thisPtr, IntPtr sender, IntPtr e)System.UnauthorizedAccessException: Access is denied.
+
+Access denied.  Calling Scale API is not allowed on this object at this time, as this object currently has the ElementCompositionPreview.GetElementVisual property in use.
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IUIElementMethods.set_Scale(IObjectReference _obj, Vector3 value)
+   at Microsoft.UI.Xaml.UIElement.set_Scale(Vector3 value)
+   at Nafer.WinUI.Features.Shell.ShellPage.AccountNavItem_PointerEntered(Object sender, PointerRoutedEventArgs e) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\Features\Shell\ShellPage.xaml.cs:line 43
+   at WinRT._EventSource_global__Microsoft_UI_Xaml_Input_PointerEventHandler.EventState.<GetEventInvoke>b__1_0(Object sender, PointerRoutedEventArgs e)
+   at ABI.Microsoft.UI.Xaml.Input.PointerEventHandler.Do_Abi_Invoke(IntPtr thisPtr, IntPtr sender, IntPtr e)System.UnauthorizedAccessException: Access is denied.
+
+Access denied.  Calling Scale API is not allowed on this object at this time, as this object currently has the ElementCompositionPreview.GetElementVisual property in use.
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IUIElementMethods.set_Scale(IObjectReference _obj, Vector3 value)
+   at Microsoft.UI.Xaml.UIElement.set_Scale(Vector3 value)
+   at Nafer.WinUI.Features.Shell.ShellPage.AccountNavItem_PointerEntered(Object sender, PointerRoutedEventArgs e) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\Features\Shell\ShellPage.xaml.cs:line 43
+   at WinRT._EventSource_global__Microsoft_UI_Xaml_Input_PointerEventHandler.EventState.<GetEventInvoke>b__1_0(Object sender, PointerRoutedEventArgs e)
+   at ABI.Microsoft.UI.Xaml.Input.PointerEventHandler.Do_Abi_Invoke(IntPtr thisPtr, IntPtr sender, IntPtr e)Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot find a Resource with the Name/Key MicrosoftControlBaseLowFillColorDefaultBrush [Line: 64 Position: 85]Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot find a Resource with the Name/Key MicrosoftControlBaseLowFillColorDefaultBrush [Line: 64 Position: 85]Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot create instance of type 'Nafer.WinUI.Features.Shell.ShellPage' [Line: 110 Position: 60]
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IApplicationStaticsMethods.LoadComponent(IObjectReference _obj, Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Microsoft.UI.Xaml.Application.LoadComponent(Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Nafer.WinUI.MainWindow.InitializeComponent() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\MainWindow.g.i.cs:line 59
+   at Nafer.WinUI.MainWindow..ctor() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\MainWindow.xaml.cs:line 14
+   at Nafer.WinUI.App.OnLaunched(LaunchActivatedEventArgs args) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\App.xaml.cs:line 46
+   at Microsoft.UI.Xaml.Application.Microsoft.UI.Xaml.IApplicationOverrides.OnLaunched(LaunchActivatedEventArgs args)
+   at ABI.Microsoft.UI.Xaml.IApplicationOverrides.Do_Abi_OnLaunched_0(IntPtr thisPtr, IntPtr args)Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot create instance of type 'Nafer.WinUI.Features.Shell.ShellPage' [Line: 110 Position: 60]
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IApplicationStaticsMethods.LoadComponent(IObjectReference _obj, Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Microsoft.UI.Xaml.Application.LoadComponent(Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Nafer.WinUI.MainWindow.InitializeComponent() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\MainWindow.g.i.cs:line 59
+   at Nafer.WinUI.MainWindow..ctor() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\MainWindow.xaml.cs:line 14
+   at Nafer.WinUI.App.OnLaunched(LaunchActivatedEventArgs args) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\App.xaml.cs:line 46
+   at Microsoft.UI.Xaml.Application.Microsoft.UI.Xaml.IApplicationOverrides.OnLaunched(LaunchActivatedEventArgs args)
+   at ABI.Microsoft.UI.Xaml.IApplicationOverrides.Do_Abi_OnLaunched_0(IntPtr thisPtr, IntPtr args)Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot create instance of type 'Nafer.WinUI.Features.Shell.ShellPage' [Line: 110 Position: 60]
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at ABI.Microsoft.UI.Xaml.IApplicationStaticsMethods.LoadComponent(IObjectReference _obj, Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Microsoft.UI.Xaml.Application.LoadComponent(Object component, Uri resourceLocator, ComponentResourceLocation componentResourceLocation)
+   at Nafer.WinUI.MainWindow.InitializeComponent() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\MainWindow.g.i.cs:line 59
+   at Nafer.WinUI.MainWindow..ctor() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\MainWindow.xaml.cs:line 14
+   at Nafer.WinUI.App.OnLaunched(LaunchActivatedEventArgs args) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\App.xaml.cs:line 46
+   at Microsoft.UI.Xaml.Application.Microsoft.UI.Xaml.IApplicationOverrides.OnLaunched(LaunchActivatedEventArgs args)
+   at ABI.Microsoft.UI.Xaml.IApplicationOverrides.Do_Abi_OnLaunched_0(IntPtr thisPtr, IntPtr args)Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot find a Resource with the Name/Key ContentAnimationTransitionCollection [Line: 43 Position: 47]Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot find a Resource with the Name/Key ContentAnimationTransitionCollection [Line: 43 Position: 47]System.Runtime.InteropServices.COMException (0x80004005): Unspecified error
+
+Cannot find a resource with the given key: StringFormatConverter.
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)
+   at ABI.Windows.Foundation.Collections.IMapMethods`2.Lookup(IObjectReference obj, K key)
+   at ABI.System.Collections.Generic.IDictionaryMethods`2.Lookup(IObjectReference obj, K key)
+   at ABI.System.Collections.Generic.IDictionaryMethods`2.Indexer_Get(IObjectReference obj, Dictionary`2 __lookupCache, K key)
+   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.LookupConverter(String key) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 330
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_ViewModel_UpdateProgress(Double obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 524
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_ViewModel(ShellViewModel obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 357
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_(ShellPage obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 340
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 281
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Initialize() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 275
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Loading(FrameworkElement src, Object data) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 314
+   at WinRT._EventSource_global__Windows_Foundation_TypedEventHandler_global__Microsoft_UI_Xaml_FrameworkElement__object_.EventState.<GetEventInvoke>b__1_0(FrameworkElement sender, Object args)
+   at WinRT.GenericTypeInstantiations.Windows_Foundation_TypedEventHandler_2_Microsoft_UI_Xaml_FrameworkElement__object.Do_Abi_Invoke(IntPtr thisPtr, IntPtr sender, IntPtr args)System.Runtime.InteropServices.COMException (0x80004005): Unspecified error
+
+Cannot find a resource with the given key: StringFormatConverter.
+   at WinRT.ExceptionHelpers.<ThrowExceptionForHR>g__Throw|38_0(Int32 hr)
+   at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr)
+   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)
+   at ABI.Windows.Foundation.Collections.IMapMethods`2.Lookup(IObjectReference obj, K key)
+   at ABI.System.Collections.Generic.IDictionaryMethods`2.Lookup(IObjectReference obj, K key)
+   at ABI.System.Collections.Generic.IDictionaryMethods`2.Indexer_Get(IObjectReference obj, Dictionary`2 __lookupCache, K key)
+   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.LookupConverter(String key) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 330
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_ViewModel_UpdateProgress(Double obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 524
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_ViewModel(ShellViewModel obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 357
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update_(ShellPage obj, Int32 phase) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 340
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Update() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 281
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Initialize() in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 275
+   at Nafer.WinUI.Features.Shell.ShellPage.ShellPage_obj1_Bindings.Loading(FrameworkElement src, Object data) in C:\Users\ADAM\Desktop\nav\Nafer-Frontend\src\Nafer.WinUI\obj\x64\Debug\net9.0-windows10.0.22621.0\win-x64\Features\Shell\ShellPage.g.cs:line 314
+   at WinRT._EventSource_global__Windows_Foundation_TypedEventHandler_global__Microsoft_UI_Xaml_FrameworkElement__object_.EventState.<GetEventInvoke>b__1_0(FrameworkElement sender, Object args)
+   at WinRT.GenericTypeInstantiations.Windows_Foundation_TypedEventHandler_2_Microsoft_UI_Xaml_FrameworkElement__object.Do_Abi_Invoke(IntPtr thisPtr, IntPtr sender, IntPtr args)

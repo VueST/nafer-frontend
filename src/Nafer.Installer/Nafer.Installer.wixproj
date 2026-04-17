@@ -1,0 +1,27 @@
+<Project Sdk="WixToolset.Sdk/4.0.0">
+  <PropertyGroup>
+    <OutputName>NaferSetup</OutputName>
+    <OutputType>Package</OutputType>
+    <Platform>x64</Platform>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <Version Condition="'$(BuildVersion)' == ''">1.0.0</Version>
+    <Version Condition="'$(BuildVersion)' != ''">$(BuildVersion)</Version>
+    <DefineConstants>BuildVersion=$(Version)</DefineConstants>
+    <SuppressIces>ICE38;ICE64</SuppressIces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.0" />
+    <PackageReference Include="WixToolset.Heat" Version="4.0.0" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <HarvestDirectory Include="..\Nafer.WinUI\bin\publish">
+      <ComponentGroupName>AppComponents</ComponentGroupName>
+      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+    </HarvestDirectory>
+    <BindInputPaths Include="..\Nafer.WinUI\bin\publish" />
+  </ItemGroup>
+</Project>

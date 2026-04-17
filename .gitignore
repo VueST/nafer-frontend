@@ -1,0 +1,10 @@
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.sln.docstates
+.idea/
+.vscode/
+*.msi
+!src/Nafer.Installer/bin/x64/Release/NaferSetup.msi

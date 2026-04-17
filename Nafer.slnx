@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Nafer.Core/Nafer.Core.csproj" />
+    <Project Path="src/Nafer.Infrastructure/Nafer.Infrastructure.csproj" />
+    <Project Path="src/Nafer.WinUI/Nafer.WinUI.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+</Solution>
