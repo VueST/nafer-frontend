@@ -28,16 +28,16 @@ public sealed class AuthService : IAuthService
     // ── Public interface ──────────────────────────────────────────────────────
 
     public Task<AuthToken> LoginAsync(string email, string password) =>
-        PostAuthAsync("/api/v1/auth/login", new { email, password });
+        PostAuthAsync("api/v1/auth/login", new { email, password });
 
     public Task<AuthToken> RegisterAsync(string email, string password) =>
-        PostAuthAsync("/api/v1/auth/register", new { email, password });
+        PostAuthAsync("api/v1/auth/register", new { email, password });
 
     public async Task<AuthToken> RefreshAsync(string refreshToken)
     {
         // snake_case field name — matches backend JSON contract
         var response = await _http.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
+            "api/v1/auth/refresh",
             new { refresh_token = refreshToken });
 
         await EnsureSuccessAsync(response, "Token refresh failed.");
@@ -50,7 +50,7 @@ public sealed class AuthService : IAuthService
 
     public async Task LogoutAsync(string accessToken, string refreshToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/auth/logout");
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/v1/auth/logout");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         request.Content = JsonContent.Create(new { refresh_token = refreshToken });
 
