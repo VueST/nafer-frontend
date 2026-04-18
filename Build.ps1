@@ -1,8 +1,20 @@
-param(
-    [string]$Version = "1.2.3"
+param (
+    [string]$Version = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+# Auto-detect version from csproj if not provided
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    $csprojPath = "src\Nafer.WinUI\Nafer.WinUI.csproj"
+    if (Test-Path $csprojPath) {
+        $xml = [xml](Get-Content $csprojPath)
+        $Version = $xml.Project.PropertyGroup.Version | Select-Object -First 1
+        Write-Host "Auto-detected Version: $Version" -ForegroundColor Cyan
+    } else {
+        $Version = "1.0.0"
+    }
+}
 
 $root = Get-Location
 $publishDir = "$root\src\Nafer.WinUI\bin\publish"
