@@ -8,7 +8,7 @@ public static class CoreServices
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
         // 1. Persistence — no dependencies
-        services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
+        services.AddSingleton<ISecureSettingsService, SecureSettingsService>();
 
         // 2. HTTP Clients — no service dependencies
         services.AddHttpClient("identity", c =>

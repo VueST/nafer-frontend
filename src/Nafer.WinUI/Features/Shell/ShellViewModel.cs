@@ -1,7 +1,10 @@
 using Microsoft.UI.Xaml.Navigation;
 using Nafer.WinUI.Infrastructure.Navigation;
 using Nafer.Core.Application.Contracts;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Disposables;
+using ReactiveUI;
 using Splat;
 using Nafer.Core.Application.Common;
 
@@ -18,7 +21,7 @@ public class ShellViewModel : ViewModelBase
     public IAuthSessionService AuthSession { get; }
     public AccountViewModel Account { get; }
     public IUpdateService UpdateService { get; }
-    public ILocalSettingsService Settings { get; }
+    public ISecureSettingsService Settings { get; }
 
     [Reactive] public double UpdateProgress { get; set; }
     [Reactive] public bool IsUpdateAvailable { get; set; }
@@ -44,13 +47,17 @@ public class ShellViewModel : ViewModelBase
         AuthSession = authSession;
         Account = accountViewModel;
         UpdateService = Nafer.WinUI.App.GetService<IUpdateService>();
-        Settings = Nafer.WinUI.App.GetService<ILocalSettingsService>();
+        Settings = Nafer.WinUI.App.GetService<ISecureSettingsService>();
 
         CheckUpdatesCommand = ReactiveCommand.CreateFromTask(CheckForUpdatesAsync);
         StartUpdateCommand = ReactiveCommand.CreateFromTask(StartUpdateAsync);
 
-        UpdateService.DownloadProgressChanged += (s, e) => 
-            UpdateProgress = e.ProgressPercentage;
+        // Best Practice: Use Reactive observables for event patterns to ensure clean disposal
+        Observable.FromEventPattern<DownloadProgressArgs>(
+            h => UpdateService.DownloadProgressChanged += h,
+            h => UpdateService.DownloadProgressChanged -= h)
+            .Subscribe(e => UpdateProgress = e.EventArgs.ProgressPercentage)
+            .DisposeWith(Disposables);
 
         // Load preferences
         ShowUpdateNotification = Settings.Get("ShowUpdateNotification", true);
@@ -59,15 +66,19 @@ public class ShellViewModel : ViewModelBase
         // Sync download indicator visibility
         this.WhenAnyValue(x => x.IsDownloading, x => x.ShowDownloadProgress)
             .Select(tuple => tuple.Item1 && tuple.Item2)
-            .Subscribe(visible => IsDownloadIndicatorVisible = visible);
+            .Subscribe(visible => IsDownloadIndicatorVisible = visible)
+            .DisposeWith(Disposables);
 
-        // Auto-check for updates (fire and forget via command to keep error handling)
-        CheckUpdatesCommand.Execute().Subscribe();
+        // Auto-check for updates
+        CheckUpdatesCommand.Execute()
+            .Subscribe()
+            .DisposeWith(Disposables);
 
         // Reactive subscription to navigation events
         NavigationService.Navigated
             .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(OnNavigated);
+            .Subscribe(OnNavigated)
+            .DisposeWith(Disposables);
 
         UpdateNavigationState();
     }

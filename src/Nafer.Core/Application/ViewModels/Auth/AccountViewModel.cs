@@ -1,4 +1,11 @@
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Disposables;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Nafer.Core.Application.Common;
+using Nafer.Core.Domain.Models;
+using Nafer.Core.Application.Contracts;
 
 namespace Nafer.Core.Application.ViewModels.Auth;
 
@@ -49,10 +56,12 @@ public class AccountViewModel : ViewModelBase
         Login           = loginViewModel;
         Register        = registerViewModel;
 
-        // Subscribe to session changes — UI reacts automatically.
+        // Best Practice: For persistent Shell components, subscribe in constructor 
+        // to ensure immediate reactivity, using Disposables to prevent leaks.
         _sessionService.SessionChanged
             .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(OnSessionChanged);
+            .Subscribe(OnSessionChanged)
+            .DisposeWith(Disposables);
 
         // Initialize immediately for the current session (handles app restart).
         OnSessionChanged(_sessionService.CurrentSession);

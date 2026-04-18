@@ -22,6 +22,7 @@ public static class UIServices
         services.AddSingleton<INavigationService>(sp => sp.GetRequiredService<NavigationService>());
         services.AddSingleton<NavigationViewService>();
         services.AddSingleton<IUpdateService, GitHubUpdateService>();
+        services.AddSingleton<ICredentialStorageService, WinCredentialStorageService>();
 
         // Shell
         services.AddSingleton<ShellViewModel>();

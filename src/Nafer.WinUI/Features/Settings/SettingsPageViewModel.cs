@@ -4,22 +4,20 @@ namespace Nafer.WinUI.Features.Settings;
 
 public class SettingsPageViewModel : ViewModelBase
 {
-    private readonly ILocalSettingsService _settingsService;
+    private readonly ISecureSettingsService _settingsService;
     private readonly IThemeSelectorService _themeSelectorService;
 
     [Reactive] public AppTheme Theme { get; set; }
+    public List<AppTheme> Themes { get; } = Enum.GetValues<AppTheme>().ToList();
+
+    [Reactive] public bool StartMinimizedToTray { get; set; }
+    [Reactive] public bool MinimizeToTrayOnClose { get; set; }
     [Reactive] public bool AutoUpdate { get; set; }
     [Reactive] public bool ShowUpdateNotification { get; set; }
     [Reactive] public bool ShowDownloadProgress { get; set; }
-    [Reactive] public bool MinimizeToTrayOnClose { get; set; }
-    [Reactive] public bool StartMinimizedToTray { get; set; }
+    [Reactive] public string AppVersion { get; set; } = "v1.3.3";
 
-    public IEnumerable<AppTheme> Themes { get; } = Enum.GetValues<AppTheme>();
-
-    public string AppVersion { get; } =
-        System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? "1.0.0";
-
-    public SettingsPageViewModel(ILocalSettingsService settingsService, IThemeSelectorService themeSelectorService)
+    public SettingsPageViewModel(ISecureSettingsService settingsService, IThemeSelectorService themeSelectorService)
     {
         _settingsService = settingsService;
         _themeSelectorService = themeSelectorService;

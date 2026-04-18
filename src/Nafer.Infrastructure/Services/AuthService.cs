@@ -26,8 +26,24 @@ public sealed class AuthService : IAuthService
 
     // ── Public interface ──────────────────────────────────────────────────────
 
-    public Task<AuthToken> LoginAsync(string email, string password) =>
-        PostAuthAsync("api/v1/auth/login", new { email, password });
+    public async Task<AuthToken> LoginAsync(string email, string password)
+    {
+        // ── Developer Admin Bypass (Requested by User) ───────────────────────
+        if (email == "admin@gmail.com" && password == "admin@gmail.com")
+        {
+            _logger.LogWarning("Developer bypass triggered for {Email} - Granting Role.Admin", email);
+            
+            return new AuthToken(
+                Token:        "dev_mock_admin_access_token",
+                RefreshToken: "dev_mock_refresh_token",
+                UserId:       "admin_bypass_id",
+                Email:        email,
+                Role:         UserRole.Admin,
+                ExpiresAt:    DateTimeOffset.UtcNow.AddDays(7));
+        }
+
+        return await PostAuthAsync("api/v1/auth/login", new { email, password });
+    }
 
     public Task<AuthToken> RegisterAsync(string email, string password) =>
         PostAuthAsync("api/v1/auth/register", new { email, password });

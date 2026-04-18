@@ -6,10 +6,10 @@ namespace Nafer.WinUI.Infrastructure.Navigation;
 
 public class ThemeSelectorService : IThemeSelectorService
 {
-    private readonly ILocalSettingsService _localSettings;
+    private readonly ISecureSettingsService _localSettings;
     public AppTheme Theme { get; private set; }
 
-    public ThemeSelectorService(ILocalSettingsService localSettings)
+    public ThemeSelectorService(ISecureSettingsService localSettings)
     {
         _localSettings = localSettings;
     }

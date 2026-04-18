@@ -28,8 +28,9 @@ public sealed class AuthSessionService : IAuthSessionService, IDisposable
     private static readonly TimeSpan RefreshLeadTime = TimeSpan.FromMinutes(2);
 
     private readonly BehaviorSubject<AuthToken?> _subject;
-    private readonly ILocalSettingsService _settings;
+    private readonly ISecureSettingsService _settings;
     private readonly IAuthService _authService;
+    private readonly ICredentialStorageService _secureStorage;
     private Timer? _refreshTimer;
 
     // ── IAuthSessionService ───────────────────────────────────────────────────
@@ -43,10 +44,14 @@ public sealed class AuthSessionService : IAuthSessionService, IDisposable
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-    public AuthSessionService(ILocalSettingsService settings, IAuthService authService)
+    public AuthSessionService(
+        ISecureSettingsService settings, 
+        IAuthService authService,
+        ICredentialStorageService secureStorage)
     {
-        _settings    = settings;
-        _authService = authService;
+        _settings      = settings;
+        _authService   = authService;
+        _secureStorage = secureStorage;
 
         // Restore whatever was persisted on the previous run.
         var restored = RestoreSession();
@@ -112,6 +117,7 @@ public sealed class AuthSessionService : IAuthSessionService, IDisposable
     public void Dispose()
     {
         _refreshTimer?.Dispose();
+        _subject.OnCompleted();
         _subject.Dispose();
     }
 
@@ -143,14 +149,19 @@ public sealed class AuthSessionService : IAuthSessionService, IDisposable
 
     private AuthToken? RestoreSession()
     {
-        var token        = _settings.Get<string>(KeyToken, string.Empty);
-        var refreshToken = _settings.Get<string>(KeyRefreshToken, string.Empty);
-        var userId       = _settings.Get<string>(KeyUserId, string.Empty);
+        var userId = _settings.Get<string>(KeyUserId, string.Empty);
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        // Retrieve sensitive tokens from secure vault
+        var token        = _secureStorage.Get("Nafer_Auth", userId);
+        var refreshToken = _secureStorage.Get("Nafer_Refresh", userId);
+        
         var email        = _settings.Get<string>(KeyEmail, string.Empty);
         var roleStr      = _settings.Get<string>(KeyRole, nameof(UserRole.User));
         var expiresStr   = _settings.Get<string>(KeyExpiresAt, string.Empty);
 
-        if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(userId))
+        if (string.IsNullOrWhiteSpace(token))
             return null;
 
         var role = Enum.TryParse<UserRole>(roleStr, ignoreCase: true, out var parsed)
@@ -161,23 +172,33 @@ public sealed class AuthSessionService : IAuthSessionService, IDisposable
             ? dt
             : DateTimeOffset.UtcNow; // treat as expired → will trigger refresh
 
-        return new AuthToken(token, refreshToken, userId, email, role, expiresAt);
+        return new AuthToken(token, refreshToken ?? string.Empty, userId, email, role, expiresAt);
     }
 
     private void PersistSession(AuthToken token)
     {
-        _settings.Save(KeyToken, token.Token);
-        _settings.Save(KeyRefreshToken, token.RefreshToken);
+        // 1. Secure storage for tokens
+        _secureStorage.Save("Nafer_Auth", token.UserId, token.Token);
+        if (!string.IsNullOrEmpty(token.RefreshToken))
+            _secureStorage.Save("Nafer_Refresh", token.UserId, token.RefreshToken);
+
+        // 2. Local settings for metadata
         _settings.Save(KeyUserId, token.UserId);
         _settings.Save(KeyEmail, token.Email);
         _settings.Save(KeyRole, token.Role.ToString());
-        _settings.Save(KeyExpiresAt, token.ExpiresAt.ToString("O")); // ISO-8601 round-trip
+        _settings.Save(KeyExpiresAt, token.ExpiresAt.ToString("O"));
     }
 
     private void EraseSession()
     {
-        _settings.Save(KeyToken, string.Empty);
-        _settings.Save(KeyRefreshToken, string.Empty);
+        var userId = _subject.Value?.UserId ?? _settings.Get<string>(KeyUserId, string.Empty);
+        
+        if (!string.IsNullOrEmpty(userId))
+        {
+            _secureStorage.Remove("Nafer_Auth", userId);
+            _secureStorage.Remove("Nafer_Refresh", userId);
+        }
+
         _settings.Save(KeyUserId, string.Empty);
         _settings.Save(KeyEmail, string.Empty);
         _settings.Save(KeyRole, string.Empty);
