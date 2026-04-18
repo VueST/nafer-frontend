@@ -30,7 +30,7 @@ public class GitHubUpdateService : IUpdateService
             if (node == null) return null;
 
             var latestVersion = new Version(node["tag_name"]?.ToString().TrimStart('v') ?? "0.0.0");
-            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
+            var currentVersion = Assembly.GetEntryAssembly()?.GetName().Version ?? new Version(0, 0, 0);
 
             if (latestVersion > currentVersion)
             {
