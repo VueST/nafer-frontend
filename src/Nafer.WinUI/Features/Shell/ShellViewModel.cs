@@ -22,6 +22,9 @@ public class ShellViewModel : ReactiveObject
     [Reactive] public bool IsUpdateAvailable { get; set; }
     [Reactive] public bool IsDownloading { get; set; }
     [Reactive] public string UpdateVersion { get; set; } = "";
+    [Reactive] public bool ShowUpdateNotification { get; set; }
+    [Reactive] public bool ShowDownloadProgress { get; set; }
+    [Reactive] public bool IsDownloadIndicatorVisible { get; set; }
     
     private VersionInfo? _latestVersion;
 
@@ -40,6 +43,15 @@ public class ShellViewModel : ReactiveObject
 
         UpdateService.DownloadProgressChanged += (s, e) => 
             UpdateProgress = e.ProgressPercentage;
+
+        // Load preferences
+        ShowUpdateNotification = Settings.Get("ShowUpdateNotification", true);
+        ShowDownloadProgress = Settings.Get("ShowDownloadProgress", true);
+
+        // Sync download indicator visibility
+        this.WhenAnyValue(x => x.IsDownloading, x => x.ShowDownloadProgress)
+            .Select(tuple => tuple.Item1 && tuple.Item2)
+            .Subscribe(visible => IsDownloadIndicatorVisible = visible);
 
         // Auto-check for updates
         _ = CheckForUpdatesAsync();
@@ -101,7 +113,8 @@ public class ShellViewModel : ReactiveObject
             }
             else
             {
-                IsUpdateAvailable = true;
+                // Only show notification if user enabled it in settings
+                IsUpdateAvailable = ShowUpdateNotification;
             }
         }
     }

@@ -40,18 +40,6 @@
       </Component>
     </Feature>
 
-    <!-- Custom Action: Launch app after install (simple EXE call) -->
-    <CustomAction Id="LaunchApplication" 
-                  Directory="INSTALLFOLDER" 
-                  ExeCommand="[INSTALLFOLDER]Nafer.WinUI.exe" 
-                  Execute="immediate" 
-                  Impersonate="yes" 
-                  Return="asyncNoWait" />
-
-    <InstallExecuteSequence>
-      <Custom Action="LaunchApplication" After="InstallFinalize" Condition="NOT Installed" />
-    </InstallExecuteSequence>
-
     <!-- UI: Standard InstallDir flow -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
   </Package>

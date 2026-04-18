@@ -7,6 +7,8 @@ public class SettingsPageViewModel : ReactiveObject
 
     [Reactive] public AppTheme Theme { get; set; }
     [Reactive] public bool AutoUpdate { get; set; }
+    [Reactive] public bool ShowUpdateNotification { get; set; }
+    [Reactive] public bool ShowDownloadProgress { get; set; }
     [Reactive] public bool MinimizeToTrayOnClose { get; set; }
     [Reactive] public bool StartMinimizedToTray { get; set; }
 
@@ -22,6 +24,8 @@ public class SettingsPageViewModel : ReactiveObject
 
         Theme               = _settingsService.Get(Nafer.Core.Settings.Theme.Name,               Nafer.Core.Settings.Theme.Default);
         AutoUpdate          = _settingsService.Get(Nafer.Core.Settings.AutoUpdate.Name,          Nafer.Core.Settings.AutoUpdate.Default);
+        ShowUpdateNotification = _settingsService.Get("ShowUpdateNotification", true);
+        ShowDownloadProgress = _settingsService.Get("ShowDownloadProgress", true);
         MinimizeToTrayOnClose = _settingsService.Get(Nafer.Core.Settings.MinimizeToTrayOnClose.Name, Nafer.Core.Settings.MinimizeToTrayOnClose.Default);
         StartMinimizedToTray  = _settingsService.Get(Nafer.Core.Settings.StartMinimizedToTray.Name,  Nafer.Core.Settings.StartMinimizedToTray.Default);
 
@@ -36,6 +40,12 @@ public class SettingsPageViewModel : ReactiveObject
 
         this.WhenAnyValue(x => x.AutoUpdate).DistinctUntilChanged().Skip(1)
             .Subscribe(v => _settingsService.Save(Nafer.Core.Settings.AutoUpdate.Name, v));
+
+        this.WhenAnyValue(x => x.ShowUpdateNotification).DistinctUntilChanged().Skip(1)
+            .Subscribe(v => _settingsService.Save("ShowUpdateNotification", v));
+
+        this.WhenAnyValue(x => x.ShowDownloadProgress).DistinctUntilChanged().Skip(1)
+            .Subscribe(v => _settingsService.Save("ShowDownloadProgress", v));
 
         this.WhenAnyValue(x => x.MinimizeToTrayOnClose).DistinctUntilChanged().Skip(1)
             .Subscribe(v => _settingsService.Save(Nafer.Core.Settings.MinimizeToTrayOnClose.Name, v));

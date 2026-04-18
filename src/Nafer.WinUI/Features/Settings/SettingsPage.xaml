@@ -90,15 +90,25 @@
                         OffContent="Off" />
                 </ctk:SettingsCard>
 
-                <ctk:SettingsCard
+                <ctk:SettingsExpander
                     Header="Auto Update"
                     Description="Automatically check for updates on startup"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE777;}">
-                    <ToggleSwitch
-                        IsOn="{x:Bind ViewModel.AutoUpdate, Mode=TwoWay}"
-                        OnContent="On"
-                        OffContent="Off" />
-                </ctk:SettingsCard>
+                    <ctk:SettingsExpander.HeaderWidget>
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AutoUpdate, Mode=TwoWay}"
+                            OnContent="On"
+                            OffContent="Off" />
+                    </ctk:SettingsExpander.HeaderWidget>
+
+                    <ctk:SettingsCard Header="Enable update notifications" HeaderIcon="{ui:FontIcon Glyph=&#xEA8F;}">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.ShowUpdateNotification, Mode=TwoWay}" OnContent="On" OffContent="Off" />
+                    </ctk:SettingsCard>
+
+                    <ctk:SettingsCard Header="Show download indicator" HeaderIcon="{ui:FontIcon Glyph=&#xE9F5;}">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.ShowDownloadProgress, Mode=TwoWay}" OnContent="On" OffContent="Off" />
+                    </ctk:SettingsCard>
+                </ctk:SettingsExpander>
 
                 <!-- About -->
                 <TextBlock

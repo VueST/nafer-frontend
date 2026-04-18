@@ -132,7 +132,7 @@
             </ScrollViewer>
 
             <!-- Update Notification Bar -->
-            <InfoBar Title="تحديث متوفر"
+            <InfoBar Title="Update Available"
                      Message="{x:Bind ViewModel.UpdateVersion, Mode=OneWay}"
                      IsOpen="{x:Bind ViewModel.IsUpdateAvailable, Mode=OneWay}"
                      Severity="Informational"
@@ -142,7 +142,7 @@
                      CornerRadius="8"
                      IsClosable="True">
                 <InfoBar.ActionButton>
-                    <Button Content="تحديث الآن" 
+                    <Button Content="Update Now" 
                             Click="{x:Bind ViewModel.StartUpdateAsync}"
                             Style="{StaticResource AccentButtonStyle}" />
                 </InfoBar.ActionButton>
@@ -151,14 +151,14 @@
             <!-- Background Download Indicator (Bottom Right) -->
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" 
                         Margin="24" Spacing="8"
-                        Visibility="{x:Bind ViewModel.IsDownloading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind ViewModel.IsDownloadIndicatorVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid>
                     <ProgressRing Value="{x:Bind ViewModel.UpdateProgress, Mode=OneWay}" 
                                   IsIndeterminate="False" Width="32" Height="32" />
                     <TextBlock Text="{x:Bind ViewModel.UpdateProgress, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='\{0:F0\}%'}" 
                                VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="9" />
                 </Grid>
-                <TextBlock Text="جاري التحميل..." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Text="Downloading..." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             </StackPanel>
         </Grid>
     </NavigationView>
