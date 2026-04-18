@@ -2,10 +2,12 @@ using Microsoft.UI.Xaml.Navigation;
 using Nafer.WinUI.Infrastructure.Navigation;
 using Nafer.Core.Application.Contracts;
 using System.Reactive.Linq;
+using Splat;
+using Nafer.Core.Application.Common;
 
 namespace Nafer.WinUI.Features.Shell;
 
-public class ShellViewModel : ReactiveObject
+public class ShellViewModel : ViewModelBase
 {
     [Reactive] public object? Selected { get; set; }
     [Reactive] public bool IsBackEnabled { get; set; }
@@ -28,6 +30,9 @@ public class ShellViewModel : ReactiveObject
     
     private VersionInfo? _latestVersion;
 
+    public ReactiveCommand<Unit, Unit> CheckUpdatesCommand { get; }
+    public ReactiveCommand<Unit, Unit> StartUpdateCommand { get; }
+
     public ShellViewModel(
         NavigationService navigationService,
         NavigationViewService navigationViewService,
@@ -41,6 +46,9 @@ public class ShellViewModel : ReactiveObject
         UpdateService = Nafer.WinUI.App.GetService<IUpdateService>();
         Settings = Nafer.WinUI.App.GetService<ILocalSettingsService>();
 
+        CheckUpdatesCommand = ReactiveCommand.CreateFromTask(CheckForUpdatesAsync);
+        StartUpdateCommand = ReactiveCommand.CreateFromTask(StartUpdateAsync);
+
         UpdateService.DownloadProgressChanged += (s, e) => 
             UpdateProgress = e.ProgressPercentage;
 
@@ -53,20 +61,14 @@ public class ShellViewModel : ReactiveObject
             .Select(tuple => tuple.Item1 && tuple.Item2)
             .Subscribe(visible => IsDownloadIndicatorVisible = visible);
 
-        // Auto-check for updates
-        _ = CheckForUpdatesAsync();
+        // Auto-check for updates (fire and forget via command to keep error handling)
+        CheckUpdatesCommand.Execute().Subscribe();
 
         // Reactive subscription to navigation events
         NavigationService.Navigated
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(OnNavigated);
 
-        // Reactive subscription to auth state (optional: can be used for sidebar badges/profile)
-        AuthSession.SessionChanged
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(_ => { /* Update auth-related properties if needed */ });
-
-        // Sync initial state
         UpdateNavigationState();
     }
 
@@ -85,11 +87,9 @@ public class ShellViewModel : ReactiveObject
 
         if (e.Content is not null)
         {
-            // Resolve the ViewModel type from the page's "ViewModel" property
             var vmType = e.Content.GetType().GetProperty("ViewModel")?.PropertyType;
             if (vmType is not null)
             {
-                // Sync the sidebar selection
                 var selectedItem = NavigationViewService.GetSelectedItem(vmType);
                 if (selectedItem is not null)
                 {
@@ -101,21 +101,35 @@ public class ShellViewModel : ReactiveObject
 
     public async Task CheckForUpdatesAsync()
     {
-        _latestVersion = await UpdateService.CheckForUpdatesAsync();
-        if (_latestVersion != null)
+        try
         {
-            UpdateVersion = _latestVersion.Version.ToString();
-            
-            bool autoUpdate = Settings.Get("AutoUpdate", true);
-            if (autoUpdate)
+            _latestVersion = await UpdateService.CheckForUpdatesAsync();
+            if (_latestVersion != null)
             {
-                await StartUpdateAsync();
+                UpdateVersion = _latestVersion.Version.ToString();
+                
+                bool autoUpdate = Settings.Get("AutoUpdate", true);
+                if (autoUpdate)
+                {
+                    await StartUpdateAsync();
+                }
+                else
+                {
+                    IsUpdateAvailable = ShowUpdateNotification;
+                }
             }
-            else
-            {
-                // Only show notification if user enabled it in settings
-                IsUpdateAvailable = ShowUpdateNotification;
-            }
+        }
+        catch (HttpRequestException ex)
+        {
+            LogHost.Default.Warn($"Network error while checking for updates: {ex.Message}");
+        }
+        catch (TaskCanceledException)
+        {
+            LogHost.Default.Warn("Update check timed out.");
+        }
+        catch (Exception ex)
+        {
+            LogHost.Default.Error(ex, "Unexpected error during update check");
         }
     }
 
@@ -123,12 +137,20 @@ public class ShellViewModel : ReactiveObject
     {
         if (_latestVersion == null) return;
         
-        IsDownloading = true;
-        IsUpdateAvailable = false;
-        
-        var tempFile = Path.Combine(Path.GetTempPath(), $"NaferSetup_{UpdateVersion}.msi");
-        await UpdateService.DownloadUpdateAsync(_latestVersion, tempFile);
-        
-        UpdateService.InstallAndRestart(tempFile);
+        try
+        {
+            IsDownloading = true;
+            IsUpdateAvailable = false;
+            
+            var tempFile = Path.Combine(Path.GetTempPath(), $"NaferSetup_{UpdateVersion}.msi");
+            await UpdateService.DownloadUpdateAsync(_latestVersion, tempFile);
+            
+            UpdateService.InstallAndRestart(tempFile);
+        }
+        catch (Exception ex)
+        {
+            LogHost.Default.Error(ex, "Update download/install failed");
+            IsDownloading = false;
+        }
     }
 }

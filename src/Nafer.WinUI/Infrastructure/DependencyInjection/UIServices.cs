@@ -21,7 +21,7 @@ public static class UIServices
         services.AddSingleton<NavigationService>();
         services.AddSingleton<INavigationService>(sp => sp.GetRequiredService<NavigationService>());
         services.AddSingleton<NavigationViewService>();
-        services.AddHttpClient<IUpdateService, GitHubUpdateService>();
+        services.AddSingleton<IUpdateService, GitHubUpdateService>();
 
         // Shell
         services.AddSingleton<ShellViewModel>();

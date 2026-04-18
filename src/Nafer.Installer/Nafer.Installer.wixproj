@@ -1,12 +1,12 @@
 <Project Sdk="WixToolset.Sdk/4.0.0">
   <PropertyGroup>
-    <OutputName>NaferSetup</OutputName>
+    <OutputName>Nafer_v$(BuildVersion)_$(Platform)</OutputName>
     <OutputType>Package</OutputType>
     <Platform>x64</Platform>
     <InstallerPlatform>x64</InstallerPlatform>
-    <Version Condition="'$(BuildVersion)' == ''">1.0.0</Version>
-    <Version Condition="'$(BuildVersion)' != ''">$(BuildVersion)</Version>
-    <DefineConstants>BuildVersion=$(Version)</DefineConstants>
+    <BuildVersion Condition="'$(BuildVersion)' == ''">1.0.0</BuildVersion>
+    <Version>$(BuildVersion)</Version>
+    <DefineConstants>BuildVersion=$(BuildVersion)</DefineConstants>
     <SuppressIces>ICE38;ICE64</SuppressIces>
   </PropertyGroup>
 

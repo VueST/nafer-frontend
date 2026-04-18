@@ -1,6 +1,8 @@
+using Nafer.Core.Application.Common;
+
 namespace Nafer.WinUI.Features.Settings;
 
-public class SettingsPageViewModel : ReactiveObject
+public class SettingsPageViewModel : ViewModelBase
 {
     private readonly ILocalSettingsService _settingsService;
     private readonly IThemeSelectorService _themeSelectorService;

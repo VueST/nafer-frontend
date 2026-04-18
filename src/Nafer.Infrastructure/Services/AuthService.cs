@@ -1,28 +1,27 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 using Nafer.Core.Application.Contracts;
 using Nafer.Core.Domain.Models;
 
 namespace Nafer.Infrastructure.Services;
 
 /// <summary>
-/// HTTP implementation of IAuthService.
-/// Maps C# calls directly to identity-service REST endpoints.
-///
-/// API contract (identity-service):
-///   POST /api/v1/auth/register  → { access_token, refresh_token, expires_at, user }
-///   POST /api/v1/auth/login     → { access_token, refresh_token, expires_at, user }
-///   POST /api/v1/auth/refresh   → { access_token, refresh_token, expires_at, user }
-///   POST /api/v1/auth/logout    → 204 No Content  (requires Bearer token)
+/// HTTP implementation of IAuthService with race-condition protection and secure OAuth.
 /// </summary>
 public sealed class AuthService : IAuthService
 {
     private readonly HttpClient _http;
+    private readonly ILogger<AuthService> _logger;
+    private readonly SemaphoreSlim _refreshLock = new(1, 1);
 
-    public AuthService(IHttpClientFactory httpClientFactory)
+    public AuthService(IHttpClientFactory httpClientFactory, ILogger<AuthService> logger)
     {
         _http = httpClientFactory.CreateClient("identity");
+        _logger = logger;
     }
 
     // ── Public interface ──────────────────────────────────────────────────────
@@ -35,17 +34,72 @@ public sealed class AuthService : IAuthService
 
     public async Task<AuthToken> RefreshAsync(string refreshToken)
     {
-        // snake_case field name — matches backend JSON contract
-        var response = await _http.PostAsJsonAsync(
-            "api/v1/auth/refresh",
-            new { refresh_token = refreshToken });
+        if (string.IsNullOrWhiteSpace(refreshToken))
+            throw new ArgumentException("Refresh token cannot be empty.", nameof(refreshToken));
 
-        await EnsureSuccessAsync(response, "Token refresh failed.");
+        await _refreshLock.WaitAsync();
+        try
+        {
+            var response = await _http.PostAsJsonAsync(
+                "api/v1/auth/refresh",
+                new { refresh_token = refreshToken });
 
-        var result = await response.Content.ReadFromJsonAsync<AuthResponse>()
-            ?? throw new InvalidOperationException("Empty response from identity service.");
+            await EnsureSuccessAsync(response, "Token refresh failed.");
 
-        return MapToToken(result);
+            var result = await response.Content.ReadFromJsonAsync<AuthResponse>()
+                ?? throw new InvalidOperationException("Empty response from identity service.");
+
+            return MapToToken(result);
+        }
+        finally
+        {
+            _refreshLock.Release();
+        }
+    }
+
+    /// <summary>
+    /// Implements Fix #6: Security-hardened browser-based login with state validation.
+    /// </summary>
+    public async Task<AuthToken> SecureLoginAsync(string oauthEndpoint, string clientId)
+    {
+        var state = Guid.NewGuid().ToString();
+        var port = new Random().Next(5000, 60000);
+        var redirectUri = $"http://127.0.0.1:{port}/callback";
+        
+        var authUrl = $"{oauthEndpoint}?client_id={clientId}&redirect_uri={Uri.EscapeDataString(redirectUri)}&response_type=code&state={state}";
+        
+        using var httpListener = new HttpListener();
+        httpListener.Prefixes.Add($"{redirectUri}/");
+        httpListener.Start();
+        
+        // Use default browser
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(authUrl) { UseShellExecute = true });
+        
+        var context = await httpListener.GetContextAsync();
+        var request = context.Request;
+        var response = context.Response;
+        
+        var receivedState = request.QueryString["state"];
+        if (receivedState != state)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes("Invalid state parameter. Security validation failed.");
+            response.StatusCode = 400;
+            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            throw new InvalidOperationException("OAuth state mismatch. Potential CSRF attempt.");
+        }
+        
+        var code = request.QueryString["code"];
+        if (string.IsNullOrEmpty(code))
+        {
+            throw new InvalidOperationException("No authorization code received.");
+        }
+        
+        byte[] successBuffer = Encoding.UTF8.GetBytes("<html><body><h1>Login successful</h1><p>You may close this window.</p></body></html>");
+        await response.OutputStream.WriteAsync(successBuffer, 0, successBuffer.Length);
+        response.Close();
+        httpListener.Stop();
+        
+        return await ExchangeCodeForTokenAsync(code, redirectUri);
     }
 
     public async Task LogoutAsync(string accessToken, string refreshToken)
@@ -54,12 +108,19 @@ public sealed class AuthService : IAuthService
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         request.Content = JsonContent.Create(new { refresh_token = refreshToken });
 
-        // Best-effort — swallow all errors. Local session clears regardless.
         try { await _http.SendAsync(request); }
-        catch { /* network failures during logout are non-fatal */ }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Remote logout failed. Local session will be cleared anyway.");
+        }
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
+
+    private async Task<AuthToken> ExchangeCodeForTokenAsync(string code, string redirectUri)
+    {
+        return await PostAuthAsync("api/v1/auth/token", new { code, redirect_uri = redirectUri, grant_type = "authorization_code" });
+    }
 
     private async Task<AuthToken> PostAuthAsync(string path, object body)
     {

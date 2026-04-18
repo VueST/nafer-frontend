@@ -70,6 +70,11 @@ Nafer follows a strict separation of concerns to ensure the codebase remains mai
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
+## 💬 Support & Community
+
+For support, feedback, or collaborations, reach out on:
+- **Discord**: `gtqn`
+
 ---
 
 <div align="center">

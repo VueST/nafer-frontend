@@ -1,3 +1,5 @@
+using Nafer.Core.Application.Common;
+
 namespace Nafer.Core.Application.ViewModels.Auth;
 
 /// <summary>
@@ -6,7 +8,7 @@ namespace Nafer.Core.Application.ViewModels.Auth;
 ///   Anonymous → Sign In / Sign Up tabs
 ///   Authenticated → User Profile panel
 /// </summary>
-public class AccountViewModel : ReactiveObject
+public class AccountViewModel : ViewModelBase
 {
     private readonly IAuthSessionService _sessionService;
     private readonly IAuthService _authService;

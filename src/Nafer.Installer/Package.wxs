@@ -2,7 +2,7 @@
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
   <Package Name="Nafer" 
-           Manufacturer="VueST" 
+           Manufacturer="gtqn" 
            Version="$(var.BuildVersion)" 
            UpgradeCode="462272e2-9d3d-4c31-893f-c9664535eca2"
            Language="1033"
@@ -26,7 +26,7 @@
                   Target="[INSTALLFOLDER]Nafer.WinUI.exe" 
                   Icon="AppIcon"
                   WorkingDirectory="INSTALLFOLDER" />
-        <RegistryValue Root="HKCU" Key="Software\VueST\Nafer" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="Software\gtqn\Nafer" Name="installed" Type="integer" Value="1" KeyPath="yes" />
       </Component>
 
       <Component Id="StartMenuShortcut" Guid="834ea261-2632-4740-9844-462272e29d3e" Directory="ApplicationProgramsFolder">
@@ -36,7 +36,7 @@
                   Icon="AppIcon"
                   WorkingDirectory="INSTALLFOLDER" />
         <RemoveFolder Id="CleanupShortcut" On="uninstall" />
-        <RegistryValue Root="HKCU" Key="Software\VueST\Nafer" Name="startmenu" Type="integer" Value="1" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="Software\gtqn\Nafer" Name="startmenu" Type="integer" Value="1" KeyPath="yes" />
       </Component>
     </Feature>
 

@@ -4,12 +4,12 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-# Auto-detect version from csproj if not provided
+# Auto-detect version from WinUI csproj if not provided
 if ([string]::IsNullOrWhiteSpace($Version)) {
     $csprojPath = "src\Nafer.WinUI\Nafer.WinUI.csproj"
     if (Test-Path $csprojPath) {
         $xml = [xml](Get-Content $csprojPath)
-        $Version = $xml.Project.PropertyGroup.Version | Select-Object -First 1
+        $Version = ([string]$xml.Project.PropertyGroup.Version).Trim()
         Write-Host "Auto-detected Version: $Version" -ForegroundColor Cyan
     } else {
         $Version = "1.0.0"
@@ -20,14 +20,13 @@ $root = Get-Location
 $publishDir = "$root\src\Nafer.WinUI\bin\publish"
 $installerProj = "$root\src\Nafer.Installer\Nafer.Installer.wixproj"
 
-Write-Host "--- Starting Master Build Process for Nafer v$Version ---" -ForegroundColor Cyan
+Write-Host "`n--- Nafer Professional Build Process (v$Version) ---" -ForegroundColor Cyan
 
-# 1. Clean and Publish
-Write-Host "[1/3] Preparing clean build of Nafer.WinUI (Self-Contained)..." -ForegroundColor Yellow
+# 1. Build and Publish WinUI App
+Write-Host "[1/2] Publishing Nafer.WinUI (Self-Contained)..." -ForegroundColor Yellow
 
+# Ensure a clean start
 if (Test-Path $publishDir) { Remove-Item -Path $publishDir -Recurse -Force }
-
-dotnet clean src\Nafer.WinUI\Nafer.WinUI.csproj -c Release -r win-x64
 
 dotnet publish src\Nafer.WinUI\Nafer.WinUI.csproj `
     -c Release `
@@ -39,27 +38,25 @@ dotnet publish src\Nafer.WinUI\Nafer.WinUI.csproj `
     -p:BuildVersion=$Version `
     -o $publishDir
 
-# 1.5 Verify Publish Assets
-Write-Host "     Verifying critical assets..." -ForegroundColor Yellow
+# Verify critical assets
 if (-not (Test-Path "$publishDir\resources.pri")) {
-    Write-Error "CRITICAL FAILURE: resources.pri missing from publish directory! Build aborted to prevent broken MSI."
+    Write-Error "CRITICAL FAILURE: Build sanity check failed (resources.pri missing)."
     exit 1
 }
-Write-Host "     Found resources.pri - Publish OK." -ForegroundColor Green
 
-# 2. Apply "The Totoro Fix": Remove problematic localization folders
-Write-Host "[2/3] Applying Totoro's cleanup trick..." -ForegroundColor Yellow
+# 2. Apply Localization Cleanup (The Totoro Fix)
+Write-Host "     Cleaning localized resources..." -ForegroundColor Yellow
 $langFolders = @("gd-gb", "mi-Nz", "ug-CN")
 foreach ($lang in $langFolders) {
     if (Test-Path "$publishDir\$lang") {
-        Write-Host "     Removing localized resources for: $lang"
         Remove-Item -Path "$publishDir\$lang" -Recurse -Force
     }
 }
 
-# 3. Build the MSI
-Write-Host "[3/3] Compiling MSI package with Wix Toolset v4..." -ForegroundColor Yellow
+# 3. Compile Installer
+Write-Host "[2/2] Generating MSI Installer Package..." -ForegroundColor Yellow
 dotnet build $installerProj -c Release -p:BuildVersion=$Version
 
-Write-Host "`n--- Build Complete! ---" -ForegroundColor Green
-Write-Host "Installer location: src\Nafer.Installer\bin\x64\Release\NaferSetup.msi`n" -ForegroundColor Cyan
+Write-Host "`n--- Build Succeeded! ---" -ForegroundColor Green
+Write-Host "Direct Launcher : src\Nafer.WinUI\bin\publish\Nafer.WinUI.exe" -ForegroundColor Cyan
+Write-Host "Final Installer : src\Nafer.Installer\bin\x64\Release\Nafer_v$($Version)_x64.msi`n" -ForegroundColor Cyan
