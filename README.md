@@ -1,6 +1,7 @@
 <div align="center">
-  <img src="src/Nafer.WinUI/Assets/nafer_banner.png" alt="Nafer Banner" width="100%">
-  
+  <br />
+  <img src="src/Nafer.WinUI/Assets/WindowIcon.png" alt="Nafer Icon" width="128">
+
   # Nafer (نافر)
   
   **A Clean, Fast, and Beautifully Engineered Content Hub for WinUI 3.**
