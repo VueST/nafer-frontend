@@ -76,24 +76,30 @@ public class GitHubUpdateService : IUpdateService
 
     public void InstallAndRestart(string msiPath)
     {
-        // Silent install per-user
+        var exePath = Environment.ProcessPath;
+        var batPath = Path.Combine(Path.GetTempPath(), "NaferUpdater.bat");
+
+        // We write a robust batch script that waits 2 seconds for our app to fully close,
+        // then runs the MSI installer silently, and finally re-launches our updated app.
+        var script = $@"
+@echo off
+timeout /t 2 /nobreak > NUL
+msiexec /i ""{msiPath}"" /qn /norestart
+start """" ""{exePath}""
+del ""%~f0""
+";
+        File.WriteAllText(batPath, script);
+
         var psi = new ProcessStartInfo
         {
-            FileName = "msiexec",
-            Arguments = $"/i \"{msiPath}\" /qn /norestart",
-            UseShellExecute = true
+            FileName = batPath,
+            UseShellExecute = true,
+            WindowStyle = ProcessWindowStyle.Hidden
         };
 
-        var process = Process.Start(psi);
-        process?.WaitForExit();
-
-        // Restart application using Environment.ProcessPath
-        var exePath = Environment.ProcessPath;
-        if (!string.IsNullOrEmpty(exePath))
-        {
-            Process.Start(new ProcessStartInfo(exePath) { UseShellExecute = true });
-        }
+        Process.Start(psi);
         
+        // Terminate our application immediately to release the file lock so msiexec can overwrite us.
         Environment.Exit(0);
     }
 }
