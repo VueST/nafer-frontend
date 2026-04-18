@@ -51,7 +51,7 @@ public sealed partial class MainWindow : WindowEx
         ((FrameworkElement)Content).ActualThemeChanged += (s, _) => 
             UpdateTitleBarButtons(s.ActualTheme == ElementTheme.Dark);
 
-        AppVersionText.Text = "1.2.3";
+        AppVersionText.Text = "1.2.4";
     }
 
     private void UpdateTitleBarButtons(bool isDark)

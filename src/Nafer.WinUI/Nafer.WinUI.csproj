@@ -25,9 +25,9 @@
     <LangVersion>latest</LangVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\WindowIcon.ico</ApplicationIcon>
-    <Version>1.2.3</Version>
-    <ApplicationDisplayVersion>1.2.3</ApplicationDisplayVersion>
-    <ApplicationVersion>1.2.3.0</ApplicationVersion>
+    <Version>1.2.4</Version>
+    <ApplicationDisplayVersion>1.2.4</ApplicationDisplayVersion>
+    <ApplicationVersion>1.2.4.0</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>
