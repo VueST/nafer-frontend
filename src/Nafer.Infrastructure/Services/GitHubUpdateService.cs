@@ -8,7 +8,7 @@ namespace Nafer.Infrastructure.Services;
 public class GitHubUpdateService : IUpdateService
 {
     private readonly HttpClient _httpClient;
-    private const string RepoUrl = "https://api.github.com/repos/VueST/Nafer/releases/latest";
+    private const string RepoUrl = "https://api.github.com/repos/VueST/nafer-frontend/releases/latest";
 
     public event EventHandler<DownloadProgressArgs>? DownloadProgressChanged;
 
