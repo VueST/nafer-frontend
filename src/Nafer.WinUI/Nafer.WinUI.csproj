@@ -26,6 +26,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\WindowIcon.ico</ApplicationIcon>
     <Version>1.2.9</Version>
+    <ApplicationDisplayVersion>1.2.9</ApplicationDisplayVersion>
+    <ApplicationVersion>1.2.9.0</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>
